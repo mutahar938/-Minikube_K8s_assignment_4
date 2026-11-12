@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-clusterip-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-clusterip
+  template:
+    metadata:
+      labels:
+        app: app-clusterip
+    spec:
+      containers:
+      - name: pod-info-container
+        image: custom-pod-app:v1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    app: app-clusterip
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
